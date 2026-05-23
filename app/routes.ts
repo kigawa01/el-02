@@ -13,6 +13,8 @@ export default [
     route("game/:id", "routes/game/detail.tsx"),
   ]),
 
+  route("diary/:diaryId/result/:resultId", "routes/diary/result.tsx"),
+
   layout("routes/dashboard/layout.tsx", [
     route("dashboard", "routes/dashboard/home.tsx"),
     route("dashboard/settings", "routes/dashboard/settings.tsx"),

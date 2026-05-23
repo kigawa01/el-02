@@ -137,7 +137,7 @@ export default function GameLayout() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
               {tooltipItem.variants.map((variant) => {
-                const selected = tooltipState.sliderValue === variant.id;
+                const selected = tooltipState.selectedVariantId === variant.id;
                 return (
                   <button
                     key={variant.id}

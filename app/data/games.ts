@@ -70,7 +70,7 @@ export const games: Game[] = [
         id: "gate",
         label: "Gate",
         hitImages: [{ src: bocchi, top: "45%", left: "35%", width: "30%", height: "40%" }],
-        acceptedItemIds: [2],
+        acceptedItemIds: [4],
       },
     ],
   },

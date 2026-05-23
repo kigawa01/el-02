@@ -2,6 +2,7 @@ import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/result";
 import { getDiary } from "../../data/diaries";
 import { games } from "../../data/games";
+import { buildClearedParams, getClearedIds } from "../../utils/cleared";
 
 export const handle = {
   title: (params: Record<string, string | undefined>) =>
@@ -16,12 +17,10 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const version = searchParams.get("version") ?? "1.0";
-  const cleared = searchParams.get("cleared") ?? "";
+  const clearedIds = getClearedIds(searchParams);
   const diary = getDiary(parseInt(params.diaryId));
 
-  const clearedIds = cleared ? cleared.split(",").map(Number) : [];
   const newClearedIds = [...new Set([...clearedIds, parseInt(params.diaryId)])];
-  const newCleared = newClearedIds.join(",");
   const allCleared = games.every((g) => newClearedIds.includes(g.id));
 
   return (
@@ -83,7 +82,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         </p>
       </div>
       <button
-        onClick={() => navigate(`/game/${params.diaryId}?version=${version}&cleared=${cleared}`)}
+        onClick={() => navigate(`/game/${params.diaryId}?${buildClearedParams(clearedIds, { version })}`)}
         style={{
           position: "absolute",
           bottom: "2rem",
@@ -100,7 +99,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         もっかいやる
       </button>
       <button
-        onClick={() => allCleared ? navigate(`/result/1`) : navigate(`/select/1?cleared=${newCleared}&version=${version}`)}
+        onClick={() => allCleared ? navigate(`/result/1`) : navigate(`/select/1?${buildClearedParams(newClearedIds, { version })}`)}
         style={{
           position: "absolute",
           bottom: "2rem",

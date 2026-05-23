@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
 import { items } from "../../data/items";
 import { getGame, resolveHotZoneImage } from "../../data/games";
+import { buildClearedParams, getClearedIds } from "../../utils/cleared";
 
 export const handle = {
   title: (params: Record<string, string | undefined>) =>
@@ -19,7 +20,7 @@ export default function GameLayout() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const version = parseFloat(searchParams.get("version") ?? "1.0");
-  const cleared = searchParams.get("cleared") ?? "";
+  const clearedIds = getClearedIds(searchParams);
   const debug = searchParams.get("debug") === "1";
   const nextVersion = parseFloat((version + 0.1).toFixed(1));
 
@@ -51,7 +52,7 @@ export default function GameLayout() {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      navigate(`/diary/${id}/result/${resultId}?version=${nextVersion}&cleared=${cleared}`);
+      navigate(`/diary/${id}/result/${resultId}?${buildClearedParams(clearedIds, { version: String(nextVersion) })}`);
     }, 3000);
   }
 

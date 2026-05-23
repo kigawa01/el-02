@@ -20,7 +20,7 @@ export type Game = {
 export const games: Game[] = [
   {
     id: 1,
-    title: "Stage 1: The Gate",
+    title: "7月☀日",
     image: back1,
     hotZones: [
       { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemId: 1 },
@@ -28,7 +28,7 @@ export const games: Game[] = [
   },
   {
     id: 2,
-    title: "Stage 2: The Dark Forest",
+    title: "8月△日",
     image: back1,
     hotZones: [
       { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemId: 2 },

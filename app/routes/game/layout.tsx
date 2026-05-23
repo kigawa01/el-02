@@ -51,7 +51,7 @@ export default function GameLayout() {
   }
 
   return (
-    <div style={{ display: "flex", height: "100%" }}>
+    <div  style={{ display: "flex", height: "100%" }}>
       {/* Main image area */}
       <main
         style={{ flex: 1, position: "relative", overflow: "hidden" }}
@@ -60,7 +60,8 @@ export default function GameLayout() {
         <img
           src={game?.image ?? "https://placehold.co/1280x720"}
           alt="game"
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          className="h-screen w-full"
+          style={{ objectFit: "cover", display: "block" }}
         />
 
         {game?.hotZones.map((zone) => (
@@ -141,6 +142,7 @@ export default function GameLayout() {
               padding: "0.75rem",
               boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
               zIndex: 10,
+              
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
@@ -181,9 +183,9 @@ export default function GameLayout() {
       </main>
 
       {/* Sidebar */}
-      <aside style={{ width: "200px", borderLeft: "1px solid #ccc", overflowY: "auto", background: "#fafafa" }}>
+      <aside  style={{ width: "200px", borderLeft: "1px solid #ccc", overflowY: "auto", background: "#fafafa" }}>
         <Outlet />
-        <ul style={{ listStyle: "none", margin: 0, padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        <ul className="h-7/8 flex flex-col justify-center align-bottom" style={{ listStyle: "none", margin: 0, padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {items.map((item) => (
             <li
               key={item.id}

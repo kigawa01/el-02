@@ -2,6 +2,11 @@ import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/result";
 import { getDiary } from "../../data/diaries";
 
+export const handle = {
+  title: (params: Record<string, string | undefined>) =>
+    getDiary(parseInt(params.diaryId ?? "1"))?.title ?? null,
+};
+
 export function meta({ params }: Route.MetaArgs) {
   return [{ title: `Diary ${params.diaryId} - Result ${params.resultId}` }];
 }

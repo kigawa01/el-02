@@ -3,6 +3,11 @@ import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
 import { items } from "../../data/items";
 import { getGame } from "../../data/games";
 
+export const handle = {
+  title: (params: Record<string, string | undefined>) =>
+    getGame(parseInt(params.id ?? "1"))?.title ?? null,
+};
+
 
 type DroppedState = {
   itemId: number;
@@ -30,7 +35,7 @@ export default function GameLayout() {
   function handleDrop(zoneId: string) {
     if (dragging === null) return;
     const zone = game?.hotZones.find((z) => z.id === zoneId);
-    if (!zone?.acceptedItemIds.includes(dragging)) return;
+    if (zone?.acceptedItemId !== dragging) return;
     setActiveZone(null);
     setDropped({ itemId: dragging, zoneId, sliderValue: 50 });
     setDragging(null);

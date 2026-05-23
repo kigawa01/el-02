@@ -71,6 +71,7 @@ export default function GameLayout() {
 
         {/* 装飾画像：バリアント選択後はvariant.decorImages、未選択時はgame.decorImages */}
         {(() => {
+          const anyVariantSelected = Object.values(placedItems).some((s) => s.selectedVariantId !== null);
           const variantDecorImages = game?.hotZones.flatMap((zone) => {
             const state = placedItems[zone.id];
             const placedItem = state ? items.find((i) => i.id === state.itemId) : null;
@@ -79,7 +80,7 @@ export default function GameLayout() {
               : null;
             return selectedVariant?.decorImages ?? [];
           }) ?? [];
-          const decorImages = variantDecorImages.length > 0 ? variantDecorImages : (game?.decorImages ?? []);
+          const decorImages = anyVariantSelected ? variantDecorImages : (game?.decorImages ?? []);
           return decorImages.map((img, i) => (
             <img
               key={i}

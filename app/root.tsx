@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -34,11 +35,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className={"flex flex-col min-h-screen"}>
-        <header className={"h-64"}>
-          <nav>
-            <NavLink to="/">Home</NavLink>
-          </nav>
-        </header>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -47,8 +43,31 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function Header() {
+  const matches = useMatches();
+  const title = matches
+    .slice()
+    .reverse()
+    .map((m) => (m.handle as { title?: (p: Record<string, string | undefined>) => string | null })?.title?.(m.params as Record<string, string | undefined>))
+    .find(Boolean) ?? null;
+
+  return (
+    <header className={"h-64"}>
+      <nav>
+        <NavLink to="/">Home</NavLink>
+      </nav>
+      {title && <span>{title}</span>}
+    </header>
+  );
+}
+
 export default function App() {
-  return <Outlet />;
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

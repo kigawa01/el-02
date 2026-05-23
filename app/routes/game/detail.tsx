@@ -1,14 +1,15 @@
-import type { Route } from "./+types/detail";
+import type {Route} from "./+types/detail";
+import {getGame} from "~/data/games";
 
-export function meta({ params }: Route.MetaArgs) {
-  return [{ title: `Game ${params.id}` }];
+export function meta({params}: Route.MetaArgs) {
+  return [{title: `Game ${params.id}`}];
 }
 
-export default function GameDetail({ params }: Route.ComponentProps) {
+export default function GameDetail({params}: Route.ComponentProps) {
+  const game = getGame(parseInt(params.id ?? "1"));
   return (
     <div>
-      <h2>Game {params.id}</h2>
-      <p>ゲームの詳細情報がここに表示されます。</p>
+      <h2>{game?.title ?? "Loading..."}</h2>
     </div>
   );
 }

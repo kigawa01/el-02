@@ -21,7 +21,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const hasNextGame = !!getGame(nextGameId);
 
   return (
-    <div　className="w-fill opacity-80 h-screen object-cover" style={{ position: "relative" }}>
+    <div　className="w-fill opacity-80 h-screen object-cover flex justify-center" style={{ position: "relative" }}>
       <img
         src={diary?.image ?? "https://placehold.co/1280x720"}
         alt="diary"
@@ -38,7 +38,13 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
           textShadow: "0 2px 8px rgba(0,0,0,0.8)",
         }}
       >
-        <h1 style={{ fontSize: "3rem", margin: 0 }}>Diary {params.diaryId}</h1>
+        <h1 style={{ fontSize: "3rem", margin: 0 }}>
+          {params.diaryId =="1" ?
+            <span>7月☀日</span>
+          :<span>8月△日</span>
+          }
+          {/* Diary {params.diaryId} */}
+          </h1>
         {params.resultId =="3" ?
         <div className="bg-[url(data/clear1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
         :
@@ -50,7 +56,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
           {params.resultId == "1"? 
             <p>セミがうるさすぎて耳から血が出てきた　<br />しばらく森には行きたくない</p>
           :params.resultId =="2"?
-           <p>セミしかいないのかこの森　カブトムシどこ・・・ここ・・・？</p>
+           <p>セミしかいないのかこの森 <br />カブトムシどこ・・・ここ・・・？</p>
            :
            <p>カブトムシ捕まえた！うれし～</p>
           }

@@ -4,6 +4,7 @@ import back2 from "./maturi.png"
 export type HotZone = {
   id: string;
   label: string;
+  defaultImage: string;
   top: string;
   left: string;
   width: string;
@@ -30,7 +31,7 @@ export const games: Game[] = [
     title: "7月☀日",
     image: back1,
     hotZones: [
-      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [1] },
+      { id: "gate", label: "Gate", defaultImage: "https://placehold.co/120x120/555/white?text=Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [1] },
     ],
   },
   {
@@ -38,7 +39,7 @@ export const games: Game[] = [
     title: "8月△日",
     image: back2,
     hotZones: [
-      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [2] },
+      { id: "gate", label: "Gate", defaultImage: "https://placehold.co/120x120/555/white?text=Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [2] },
     ],
   },
 ];

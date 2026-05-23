@@ -10,7 +10,7 @@ export const handle = {
 
 type ZoneState = {
   itemId: number;
-  sliderValue: number;
+  selectedVariantId: number | null;
 };
 type PlacedItems = Record<string, ZoneState>;
 
@@ -36,20 +36,19 @@ export default function GameLayout() {
     if (dragging === null) return;
     const zone = game?.hotZones.find((z) => z.id === zoneId);
     if (!zone?.acceptedItemIds.includes(dragging)) return;
-    const initialValue = zone.variants[0]?.id ?? 0;
-    setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: dragging, sliderValue: initialValue } }));
+    setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: dragging, selectedVariantId: null } }));
     setTooltipZoneId(zoneId);
     setActiveZone(null);
     setDragging(null);
   }
 
-  function handleVariantSelect(zoneId: string, value: number) {
-    setPlacedItems((prev) => ({ ...prev, [zoneId]: { ...prev[zoneId], sliderValue: value } }));
+  function handleVariantSelect(zoneId: string, variantId: number, resultId: number) {
+    setPlacedItems((prev) => ({ ...prev, [zoneId]: { ...prev[zoneId], selectedVariantId: variantId } }));
     setTooltipZoneId(null);
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      navigate(`/diary/${id}/result/1?version=${nextVersion}`);
+      navigate(`/diary/${id}/result/${resultId}?version=${nextVersion}`);
     }, 3000);
   }
 
@@ -71,7 +70,10 @@ export default function GameLayout() {
         {game?.hotZones.map((zone) => {
           const state = placedItems[zone.id];
           const placedItem = state ? items.find((i) => i.id === state.itemId) : null;
-          const zoneImage = placedItem ? resolveHotZoneImage(placedItem, state?.sliderValue ?? 0) : null;
+          const selectedVariant = placedItem && state?.selectedVariantId !== null
+            ? placedItem.variants.find((v) => v.id === state.selectedVariantId)
+            : null;
+          const zoneImage = selectedVariant?.zoneImage ?? zone.defaultImage;
           return (
             <div
               key={zone.id}
@@ -91,18 +93,20 @@ export default function GameLayout() {
                 transition: "outline-color 0.15s",
               }}
             >
-              <img
-                src={zoneImage ?? ""}
-                alt={zone.label}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "contain",
-                  pointerEvents: "none",
-                  opacity: activeZone === zone.id ? 0.7 : 1,
-                  transition: "opacity 0.15s",
-                }}
-              />
+              {zoneImage && (
+                <img
+                  src={zoneImage}
+                  alt={zone.label}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                    pointerEvents: "none",
+                    opacity: activeZone === zone.id ? 0.7 : 1,
+                    transition: "opacity 0.15s",
+                  }}
+                />
+              )}
             </div>
           );
         })}
@@ -137,7 +141,7 @@ export default function GameLayout() {
                 return (
                   <button
                     key={variant.id}
-                    onClick={() => handleVariantSelect(tooltipZoneId!, variant.id)}
+                    onClick={() => handleVariantSelect(tooltipZoneId!, variant.id, variant.resultId)}
                     style={{
                       padding: "0.4rem 0.75rem",
                       borderRadius: "6px",

@@ -34,23 +34,28 @@ export default function SelectDetail({ params }: Route.ComponentProps) {
         alt="select"
         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
       />
-      {select?.overlayImages.map((img, i) => (
-        <img
-          key={i}
-          src={img.src}
-          alt=""
-          onClick={() => img.navigateTo && navigate(`${img.navigateTo}?${query}`)}
-          style={{
-            position: "absolute",
-            top: img.top,
-            left: img.left,
-            width: img.width,
-            height: img.height,
-            objectFit: "contain",
-            cursor: img.navigateTo ? "pointer" : "default",
-          }}
-        />
-      ))}
+      {select?.overlayImages.map((img, i) => {
+        const gameId = img.navigateTo ? parseInt(img.navigateTo.split("/").pop() ?? "") : NaN;
+        const isCleared = !isNaN(gameId) && clearedIds.includes(gameId);
+        const displaySrc = isCleared && img.clearedSrc ? img.clearedSrc : img.src;
+        return (
+          <img
+            key={i}
+            src={displaySrc}
+            alt=""
+            onClick={() => img.navigateTo && navigate(`${img.navigateTo}?${query}`)}
+            style={{
+              position: "absolute",
+              top: img.top,
+              left: img.left,
+              width: img.width,
+              height: img.height,
+              objectFit: "contain",
+              cursor: img.navigateTo ? "pointer" : "default",
+            }}
+          />
+        );
+      })}
       {hasPrev && (
         <button
           onClick={() => navigate(`/select/${currentId - 1}?${query}`)}

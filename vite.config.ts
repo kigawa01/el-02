@@ -7,7 +7,14 @@ export default defineConfig(({ command }) => ({
   resolve: {
     tsconfigPaths: true,
   },
-  ssr: command === "build"
-    ? { target: "webworker", noExternal: true }
-    : {},
+  ...(command === "build" && {
+    environments: {
+      ssr: {
+        resolve: {
+          conditions: ["workerd"],
+          noExternal: true,
+        },
+      },
+    },
+  }),
 }));

@@ -25,6 +25,7 @@ export type Game = {
   id: number;
   title: string;
   image: string;
+  aspectRatio: string;
   decorImages: ZoneImage[];
   hotZones: HotZone[];
 };
@@ -40,6 +41,7 @@ export const games: Game[] = [
     id: 1,
     title: "7月☀日",
     image: back1,
+    aspectRatio: "1536/1024",
     decorImages: [
       { src: boy, top: "50%", left: "35%", width: "30%", height: "40%" },
       { src: semi, top: "15%", left: "25%", width: "5%", height: "40%" },
@@ -61,6 +63,7 @@ export const games: Game[] = [
     id: 2,
     title: "8月△日",
     image: back2,
+    aspectRatio: "1672/941",
     decorImages: [],
     hotZones: [
       {

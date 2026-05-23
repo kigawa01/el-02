@@ -2,7 +2,10 @@ import back1 from "./mori.png";
 import back2 from "./maturi.png";
 import boy from "./boy1.png";
 import semi from "./semi.png";
-import kaminari from "./kaminari.png"
+import kaminari from "./kaminari.png";
+import bocchi from "./boy3.png"
+
+
 export type ZoneImage = {
   src: string;
   top: string;
@@ -63,7 +66,7 @@ export const games: Game[] = [
       {
         id: "gate",
         label: "Gate",
-        hitImages: [{ src: "https://placehold.co/120x120/555/white?text=Gate", top: "30%", left: "35%", width: "30%", height: "40%" }],
+        hitImages: [{ src: bocchi, top: "45%", left: "35%", width: "30%", height: "40%" }],
         acceptedItemIds: [2],
       },
     ],

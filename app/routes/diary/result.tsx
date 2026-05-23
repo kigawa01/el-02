@@ -45,7 +45,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
           }
           {/* Diary {params.diaryId} */}
           </h1>
-        {params.resultId =="3" ?
+        {params.diaryId=="1" &&　params.resultId =="3" ?
         <div className="bg-[url(data/clear1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
         :
         <div className="bg-[url(data/clear2.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
@@ -53,12 +53,26 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         }
         
         <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}
-          {params.resultId == "1"? 
-            <p>セミがうるさすぎて耳から血が出てきた　<br />しばらく森には行きたくない</p>
-          :params.resultId =="2"?
-           <p>セミしかいないのかこの森 <br />カブトムシどこ・・・ここ・・・？</p>
-           :
-           <p>カブトムシ捕まえた！うれし～</p>
+
+          {params.diaryId =="1"?<div>
+            {params.resultId == "1"? 
+              <p>セミがうるさすぎて耳から血が出てきた　<br />しばらく森には行きたくない</p>
+            :params.resultId =="2"?
+            <p>セミしかいないのかこの森 <br />カブトムシどこ・・・ここ・・・？</p>
+            :
+            <p>カブトムシ捕まえた！うれし～</p>
+            }
+
+
+          </div>:
+          <div>
+            {params.resultId == "1"? 
+              <p>偶然友達と会えた！</p>
+            :params.resultId =="2"?
+            <p>新しい友達ができた！</p>
+            :
+            <p>所詮クソ田舎　すべてが虚しい</p>
+            }</div>
           }
 
 

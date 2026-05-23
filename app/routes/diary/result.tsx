@@ -49,11 +49,25 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
           }
           {/* Diary {params.diaryId} */}
           </h1>
-        {params.diaryId=="1" &&　params.resultId =="3" ?
+        {params.diaryId =="1"?<div>
+        {params.resultId =="3" ?
         <div className="bg-[url(data/clear1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
         :
         <div className="bg-[url(data/clear2.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
         
+        }
+
+
+        </div>:
+        <div>
+        {params.resultId =="3"?
+        <div className="bg-[url(data/maturi_select.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
+        :
+        <div className="bg-[url(data/maturi1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
+        }
+
+
+        </div>
         }
         
         <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}

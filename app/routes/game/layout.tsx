@@ -46,13 +46,13 @@ export default function GameLayout() {
 
   
 
-  function handleVariantSelect(zoneId: string, variantId: number, resultId: number) {
+  function handleVariantSelect(zoneId: string, variantId: number, resultId: number, outcome: "clear" | "fail") {
     setPlacedItems((prev) => ({ ...prev, [zoneId]: { ...prev[zoneId], selectedVariantId: variantId } }));
     setTooltipZoneId(null);
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      navigate(`/diary/${id}/result/${resultId}?${buildClearedParams(clearedIds, { version: String(nextVersion) })}`);
+      navigate(`/diary/${id}/result/${resultId}?${buildClearedParams(clearedIds, { version: String(nextVersion), outcome })}`);
     }, 3000);
   }
 
@@ -178,7 +178,7 @@ export default function GameLayout() {
                 return (
                   <button
                     key={variant.id}
-                    onClick={() => handleVariantSelect(tooltipZoneId!, variant.id, variant.resultId)}
+                    onClick={() => handleVariantSelect(tooltipZoneId!, variant.id, variant.resultId, variant.outcome)}
                     style={{
                       padding: "0.4rem 0.75rem",
                       borderRadius: "6px",

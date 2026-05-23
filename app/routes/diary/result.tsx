@@ -17,10 +17,13 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const version = searchParams.get("version") ?? "1.0";
+  const outcome = searchParams.get("outcome") ?? "fail";
   const clearedIds = getClearedIds(searchParams);
   const diary = getDiary(parseInt(params.diaryId));
 
-  const newClearedIds = [...new Set([...clearedIds, parseInt(params.diaryId)])];
+  const newClearedIds = outcome === "clear"
+    ? [...new Set([...clearedIds, parseInt(params.diaryId)])]
+    : clearedIds;
   const allCleared = games.every((g) => newClearedIds.includes(g.id));
 
   return (
@@ -82,7 +85,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         </p>
       </div>
       <button
-        onClick={() => navigate(`/game/${params.diaryId}?${buildClearedParams(clearedIds, { version })}`)}
+        onClick={() => navigate(`/game/${params.diaryId}?${buildClearedParams(clearedIds, { version })}`) }
         style={{
           position: "absolute",
           bottom: "2rem",

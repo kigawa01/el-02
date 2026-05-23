@@ -58,7 +58,23 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
 
         </p>
       </div>
-      
+      <button
+        onClick={() => hasNextGame ? navigate(`/game/${params.diaryId}?version=${version}`) : navigate(`/result/1`)}
+        style={{
+          position: "absolute",
+          bottom: "2rem",
+          left: "2rem",
+          padding: "0.75rem 1.5rem",
+          fontSize: "1rem",
+          background: "white",
+          border: "none",
+          borderRadius: "8px",
+          cursor: "pointer",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+        }}
+      >
+        もっかいやる
+      </button>
       <button
         onClick={() => hasNextGame ? navigate(`/game/${nextGameId}?version=${version}`) : navigate(`/result/1`)}
         style={{

@@ -26,6 +26,7 @@ export default function GameLayout() {
 
   const game = getGame(parseInt(id ?? "1"));
   const [dragging, setDragging] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
   const [activeZone, setActiveZone] = useState<string | null>(null);
   const [placedItems, setPlacedItems] = useState<PlacedItems>({});
   const [tooltipZoneId, setTooltipZoneId] = useState<string | null>(null);
@@ -34,14 +35,16 @@ export default function GameLayout() {
   const tooltipZone = tooltipZoneId ? game?.hotZones.find((z) => z.id === tooltipZoneId) : null;
   const tooltipState = tooltipZoneId ? placedItems[tooltipZoneId] : null;
   const tooltipItem = tooltipState ? items.find((i) => i.id === tooltipState.itemId) : null;
-  function handleDrop(zoneId: string) {
-    if (dragging === null) return;
+  function handleDrop(zoneId: string, itemId?: number) {
+    const id = itemId ?? dragging;
+    if (id === null || id === undefined) return;
     const zone = game?.hotZones.find((z) => z.id === zoneId);
-    if (!zone?.acceptedItemIds.includes(dragging)) return;
-    setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: dragging, selectedVariantId: null } }));
+    if (!zone?.acceptedItemIds.includes(id)) return;
+    setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: id, selectedVariantId: null } }));
     setTooltipZoneId(zoneId);
     setActiveZone(null);
     setDragging(null);
+    setSelectedItem(null);
   }
 
   
@@ -120,6 +123,7 @@ export default function GameLayout() {
                     onDragOver={(e) => { e.preventDefault(); if (zone.acceptedItemIds.includes(dragging)) setActiveZone(zone.id); }}
                     onDragLeave={() => setActiveZone(null)}
                     onDrop={(e) => { e.stopPropagation(); handleDrop(zone.id); }}
+                    onClick={(e) => { e.stopPropagation(); if (selectedItem !== null) handleDrop(zone.id, selectedItem); }}
                     style={{
                       position: "absolute",
                       top: img.top,
@@ -251,10 +255,13 @@ export default function GameLayout() {
               draggable
               onDragStart={() => setDragging(item.id)}
               onDragEnd={() => setDragging(null)}
+              onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
               style={{
                 cursor: "grab",
                 opacity: dragging === item.id ? 0.4 : 1,
                 textAlign: "center",
+                outline: selectedItem === item.id ? "3px solid #2980b9" : "none",
+                borderRadius: "10px",
               }}
             >
               <img
@@ -271,10 +278,13 @@ export default function GameLayout() {
               draggable
               onDragStart={() => setDragging(item.id)}
               onDragEnd={() => setDragging(null)}
+              onClick={() => setSelectedItem(selectedItem === item.id ? null : item.id)}
               style={{
                 cursor: "grab",
                 opacity: dragging === item.id ? 0.4 : 1,
                 textAlign: "center",
+                outline: selectedItem === item.id ? "3px solid #2980b9" : "none",
+                borderRadius: "10px",
               }}
             >
               <img

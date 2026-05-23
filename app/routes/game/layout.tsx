@@ -35,7 +35,7 @@ export default function GameLayout() {
   function handleDrop(zoneId: string) {
     if (dragging === null) return;
     const zone = game?.hotZones.find((z) => z.id === zoneId);
-    if (zone?.acceptedItemId !== dragging) return;
+    if (!zone?.acceptedItemIds.includes(dragging)) return;
     const initialValue = zone.variants[0]?.id ?? 0;
     setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: dragging, sliderValue: initialValue } }));
     setTooltipZoneId(zoneId);
@@ -70,11 +70,12 @@ export default function GameLayout() {
 
         {game?.hotZones.map((zone) => {
           const state = placedItems[zone.id];
-          const zoneImage = resolveHotZoneImage(zone, state?.sliderValue ?? 0);
+          const placedItem = state ? items.find((i) => i.id === state.itemId) : null;
+          const zoneImage = placedItem ? resolveHotZoneImage(placedItem, state?.sliderValue ?? 0) : null;
           return (
             <div
               key={zone.id}
-              onDragOver={(e) => { e.preventDefault(); if (dragging === zone.acceptedItemId) setActiveZone(zone.id); }}
+              onDragOver={(e) => { e.preventDefault(); if (zone.acceptedItemIds.includes(dragging)) setActiveZone(zone.id); }}
               onDragLeave={() => setActiveZone(null)}
               onDrop={(e) => { e.stopPropagation(); handleDrop(zone.id); }}
               style={{
@@ -91,7 +92,7 @@ export default function GameLayout() {
               }}
             >
               <img
-                src={zoneImage}
+                src={zoneImage ?? ""}
                 alt={zone.label}
                 style={{
                   width: "100%",
@@ -131,12 +132,12 @@ export default function GameLayout() {
               <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{tooltipItem.name}</span>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-              {tooltipZone.variants.map((variant) => {
+              {tooltipItem.variants.map((variant) => {
                 const selected = tooltipState.sliderValue === variant.id;
                 return (
                   <button
                     key={variant.id}
-                    onClick={() => handleVariantSelect(tooltipZone.id, variant.id)}
+                    onClick={() => handleVariantSelect(tooltipZoneId!, variant.id)}
                     style={{
                       padding: "0.4rem 0.75rem",
                       borderRadius: "6px",

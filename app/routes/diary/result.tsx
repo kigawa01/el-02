@@ -37,9 +37,26 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         }}
       >
         <h1 style={{ fontSize: "3rem", margin: 0 }}>Diary {params.diaryId}</h1>
+        {params.resultId =="3" ?
         <div className="bg-[url(data/clear1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
-        <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}</p>
+        :
+        <div className="bg-[url(data/clear2.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
+        
+        }
+        
+        <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}
+          {params.resultId == "1"? 
+            <p>セミがうるさすぎて耳から血が出てきた　<br />しばらく森には行きたくない</p>
+          :params.resultId =="2"?
+           <p>セミしかいないのかこの森　カブトムシどこ・・・ここ・・・？</p>
+           :
+           <p>カブトムシ捕まえた！うれし～</p>
+          }
+
+
+        </p>
       </div>
+      
       <button
         onClick={() => navigate(`/game/${nextGameId}?version=${version}`)}
         style={{

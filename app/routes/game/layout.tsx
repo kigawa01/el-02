@@ -221,7 +221,7 @@ export default function GameLayout() {
               <img
                 src={item.image}
                 alt={item.name}
-                style={{ width: "80px", height: "80px", borderRadius: "8px", display: "block", margin: "0 auto" }}
+                style={{ width: "80px", height: "80px", borderRadius: "8px", display: "block", margin: "0 auto",objectFit:"contain" }}
               />
               <div style={{ fontSize: "0.75rem", marginTop: "0.25rem" }}>{item.name}</div>
             </li>

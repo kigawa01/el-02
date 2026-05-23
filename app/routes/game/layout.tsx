@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
 import { items } from "../../data/items";
-import { getGame } from "../../data/games";
+import { getGame, resolveHotZoneImage } from "../../data/games";
 
 export const handle = {
   title: (params: Record<string, string | undefined>) =>
     getGame(parseInt(params.id ?? "1"))?.title ?? null,
 };
 
-
-type DroppedState = {
+type ZoneState = {
   itemId: number;
-  zoneId: string;
   sliderValue: number;
-} | null;
+};
+type PlacedItems = Record<string, ZoneState>;
 
 export default function GameLayout() {
   const navigate = useNavigate();
@@ -26,23 +25,27 @@ export default function GameLayout() {
   const game = getGame(parseInt(id ?? "1"));
   const [dragging, setDragging] = useState<number | null>(null);
   const [activeZone, setActiveZone] = useState<string | null>(null);
-  const [dropped, setDropped] = useState<DroppedState>(null);
+  const [placedItems, setPlacedItems] = useState<PlacedItems>({});
+  const [tooltipZoneId, setTooltipZoneId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const droppedItem = dropped ? items.find((i) => i.id === dropped.itemId) : null;
-  const droppedZone = dropped ? game?.hotZones.find((z) => z.id === dropped.zoneId) : null;
-
+  const tooltipZone = tooltipZoneId ? game?.hotZones.find((z) => z.id === tooltipZoneId) : null;
+  const tooltipState = tooltipZoneId ? placedItems[tooltipZoneId] : null;
+  const tooltipItem = tooltipState ? items.find((i) => i.id === tooltipState.itemId) : null;
   function handleDrop(zoneId: string) {
     if (dragging === null) return;
     const zone = game?.hotZones.find((z) => z.id === zoneId);
     if (zone?.acceptedItemId !== dragging) return;
+    const initialValue = zone.variants[0]?.id ?? 0;
+    setPlacedItems((prev) => ({ ...prev, [zoneId]: { itemId: dragging, sliderValue: initialValue } }));
+    setTooltipZoneId(zoneId);
     setActiveZone(null);
-    setDropped({ itemId: dragging, zoneId, sliderValue: 50 });
     setDragging(null);
   }
 
-  function handleConfirm() {
-    setDropped(null);
+  function handleVariantSelect(zoneId: string, value: number) {
+    setPlacedItems((prev) => ({ ...prev, [zoneId]: { ...prev[zoneId], sliderValue: value } }));
+    setTooltipZoneId(null);
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
@@ -56,6 +59,7 @@ export default function GameLayout() {
       <main
         style={{ flex: 1, position: "relative", overflow: "hidden" }}
         onDragOver={(e) => e.preventDefault()}
+        onClick={() => setTooltipZoneId(null)}
       >
         <img
           src={game?.image ?? "https://placehold.co/1280x720"}
@@ -64,32 +68,94 @@ export default function GameLayout() {
           style={{ objectFit: "cover", display: "block" }}
         />
 
-        {game?.hotZones.map((zone) => (
+        {game?.hotZones.map((zone) => {
+          const state = placedItems[zone.id];
+          const zoneImage = resolveHotZoneImage(zone, state?.sliderValue ?? 0);
+          return (
+            <div
+              key={zone.id}
+              onDragOver={(e) => { e.preventDefault(); if (dragging === zone.acceptedItemId) setActiveZone(zone.id); }}
+              onDragLeave={() => setActiveZone(null)}
+              onDrop={(e) => { e.stopPropagation(); handleDrop(zone.id); }}
+              style={{
+                position: "absolute",
+                top: zone.top,
+                left: zone.left,
+                width: zone.width,
+                height: zone.height,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                outline: debug ? `3px dashed ${activeZone === zone.id ? "#f1c40f" : "rgba(255,255,255,0.4)"}` : "none",
+                transition: "outline-color 0.15s",
+              }}
+            >
+              <img
+                src={zoneImage}
+                alt={zone.label}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  pointerEvents: "none",
+                  opacity: activeZone === zone.id ? 0.7 : 1,
+                  transition: "opacity 0.15s",
+                }}
+              />
+            </div>
+          );
+        })}
+
+        {/* Tooltip */}
+        {tooltipZone && tooltipState && tooltipItem && (
           <div
-            key={zone.id}
-            onDragOver={(e) => { e.preventDefault(); setActiveZone(zone.id); }}
-            onDragLeave={() => setActiveZone(null)}
-            onDrop={() => handleDrop(zone.id)}
+            onClick={(e) => e.stopPropagation()}
             style={{
               position: "absolute",
-              top: zone.top,
-              left: zone.left,
-              width: zone.width,
-              height: zone.height,
-              border: debug ? `3px dashed ${activeZone === zone.id ? "#f1c40f" : "rgba(255,255,255,0.4)"}` : "none",
-              background: debug && activeZone === zone.id ? "rgba(241,196,15,0.2)" : "transparent",
+              top: tooltipZone.top,
+              left: `calc(${tooltipZone.left} - 220px)`,
+              width: "200px",
+              background: "white",
               borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontSize: "0.875rem",
-              transition: "background 0.15s, border-color 0.15s",
+              padding: "0.75rem",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
+              zIndex: 10,
             }}
           >
-            {debug && zone.label}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+              <img
+                src={tooltipItem.image}
+                alt={tooltipItem.name}
+                style={{ width: "40px", height: "40px", borderRadius: "4px" }}
+              />
+              <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{tooltipItem.name}</span>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              {tooltipZone.variants.map((variant) => {
+                const selected = tooltipState.sliderValue === variant.id;
+                return (
+                  <button
+                    key={variant.id}
+                    onClick={() => handleVariantSelect(tooltipZone.id, variant.id)}
+                    style={{
+                      padding: "0.4rem 0.75rem",
+                      borderRadius: "6px",
+                      border: selected ? "2px solid #2980b9" : "2px solid transparent",
+                      background: selected ? "#eaf4fb" : "#f5f5f5",
+                      cursor: "pointer",
+                      fontSize: "0.875rem",
+                      fontWeight: selected ? "bold" : "normal",
+                      textAlign: "left",
+                      width: "100%",
+                    }}
+                  >
+                    {variant.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        ))}
+        )}
 
         {/* Modal */}
         {showModal && (
@@ -129,57 +195,6 @@ export default function GameLayout() {
           </div>
         )}
 
-        {/* Tooltip */}
-        {dropped && droppedItem && droppedZone && (
-          <div
-            style={{
-              position: "absolute",
-              top: droppedZone.top,
-              left: `calc(${droppedZone.left} - 220px)`,
-              width: "200px",
-              background: "white",
-              borderRadius: "8px",
-              padding: "0.75rem",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.35)",
-              zIndex: 10,
-              
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-              <img
-                src={droppedItem.image}
-                alt={droppedItem.name}
-                style={{ width: "40px", height: "40px", borderRadius: "4px" }}
-              />
-              <span style={{ fontWeight: "bold", fontSize: "0.9rem" }}>{droppedItem.name}</span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={dropped.sliderValue}
-              onChange={(e) => setDropped({ ...dropped, sliderValue: parseInt(e.target.value) })}
-              style={{ width: "100%", marginBottom: "0.25rem" }}
-            />
-            <div style={{ textAlign: "center", fontSize: "0.8rem", color: "#555", marginBottom: "0.75rem" }}>
-              {dropped.sliderValue}
-            </div>
-            <div style={{ display: "flex", gap: "0.5rem" }}>
-              <button
-                onClick={() => setDropped(null)}
-                style={{ flex: 1, padding: "0.4rem", borderRadius: "4px", border: "1px solid #ccc", cursor: "pointer", background: "white", fontSize: "0.8rem" }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirm}
-                style={{ flex: 1, padding: "0.4rem", borderRadius: "4px", border: "none", cursor: "pointer", background: "#2980b9", color: "white", fontSize: "0.8rem" }}
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* Sidebar */}

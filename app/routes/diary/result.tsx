@@ -19,7 +19,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const nextGameId = parseInt(params.diaryId) + 1;
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div　className="w-fill opacity-80 h-screen object-cover" style={{ position: "relative" }}>
       <img
         src={diary?.image ?? "https://placehold.co/1280x720"}
         alt="diary"
@@ -37,6 +37,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         }}
       >
         <h1 style={{ fontSize: "3rem", margin: 0 }}>Diary {params.diaryId}</h1>
+        <div className="bg-[url(data/clear1.png)] h-70 w-100 bg-cover mx-5 rounded-lg border-2 border-amber-200"></div>
         <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}</p>
       </div>
       <button
@@ -54,7 +55,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
           boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
         }}
       >
-        Next →
+        次の日へ →
       </button>
     </div>
   );

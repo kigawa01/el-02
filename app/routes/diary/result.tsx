@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/result";
 import { getDiary } from "../../data/diaries";
 
@@ -8,6 +8,8 @@ export function meta({ params }: Route.MetaArgs) {
 
 export default function DiaryResult({ params }: Route.ComponentProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const version = searchParams.get("version") ?? "1.0";
   const diary = getDiary(parseInt(params.diaryId));
   const nextGameId = parseInt(params.diaryId) + 1;
 
@@ -33,7 +35,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}</p>
       </div>
       <button
-        onClick={() => navigate(`/game/${nextGameId}`)}
+        onClick={() => navigate(`/game/${nextGameId}?version=${version}`)}
         style={{
           position: "absolute",
           bottom: "2rem",

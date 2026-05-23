@@ -7,6 +7,7 @@ export type HotZone = {
   left: string;
   width: string;
   height: string;
+  acceptedItemIds: number[];
 };
 
 export type Game = {
@@ -20,14 +21,14 @@ export const games: Game[] = [
     id: 1,
     image: back1,
     hotZones: [
-      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%" },
+      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [1, 3] },
     ],
   },
   {
     id: 2,
     image: "https://placehold.co/1280x720/16213e/white?text=Game+2",
     hotZones: [
-      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%" },
+      { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemIds: [2, 4] },
     ],
   },
 ];

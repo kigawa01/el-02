@@ -1,7 +1,12 @@
+import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/detail";
 import { getSelect } from "../../data/selects";
 
 export default function SelectDetail({ params }: Route.ComponentProps) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const cleared = searchParams.get("cleared") ?? "";
+  const version = searchParams.get("version") ?? "1.0";
   const select = getSelect(parseInt(params.id));
 
   return (
@@ -16,6 +21,7 @@ export default function SelectDetail({ params }: Route.ComponentProps) {
           key={i}
           src={img.src}
           alt=""
+          onClick={() => img.navigateTo && navigate(`${img.navigateTo}?cleared=${cleared}&version=${version}`)}
           style={{
             position: "absolute",
             top: img.top,
@@ -23,7 +29,7 @@ export default function SelectDetail({ params }: Route.ComponentProps) {
             width: img.width,
             height: img.height,
             objectFit: "contain",
-            pointerEvents: "none",
+            cursor: img.navigateTo ? "pointer" : "default",
           }}
         />
       ))}

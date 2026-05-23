@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/result";
 import { getDiary } from "../../data/diaries";
-import { getGame } from "../../data/games";
+import { games } from "../../data/games";
 
 export const handle = {
   title: (params: Record<string, string | undefined>) =>
@@ -16,9 +16,13 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const version = searchParams.get("version") ?? "1.0";
+  const cleared = searchParams.get("cleared") ?? "";
   const diary = getDiary(parseInt(params.diaryId));
-  const nextGameId = parseInt(params.diaryId) + 1;
-  const hasNextGame = !!getGame(nextGameId);
+
+  const clearedIds = cleared ? cleared.split(",").map(Number) : [];
+  const newClearedIds = [...new Set([...clearedIds, parseInt(params.diaryId)])];
+  const newCleared = newClearedIds.join(",");
+  const allCleared = games.every((g) => newClearedIds.includes(g.id));
 
   return (
     <div　className="w-fill opacity-80 h-screen object-cover flex justify-center" style={{ position: "relative" }}>
@@ -65,7 +69,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         </p>
       </div>
       <button
-        onClick={() => hasNextGame ? navigate(`/game/${params.diaryId}?version=${version}`) : navigate(`/result/1`)}
+        onClick={() => navigate(`/game/${params.diaryId}?version=${version}&cleared=${cleared}`)}
         style={{
           position: "absolute",
           bottom: "2rem",
@@ -82,7 +86,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         もっかいやる
       </button>
       <button
-        onClick={() => hasNextGame ? navigate(`/game/${nextGameId}?version=${version}`) : navigate(`/result/1`)}
+        onClick={() => allCleared ? navigate(`/result/1`) : navigate(`/select/1?cleared=${newCleared}&version=${version}`)}
         style={{
           position: "absolute",
           bottom: "2rem",

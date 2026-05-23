@@ -19,6 +19,7 @@ export default function GameLayout() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const version = parseFloat(searchParams.get("version") ?? "1.0");
+  const cleared = searchParams.get("cleared") ?? "";
   const debug = searchParams.get("debug") === "1";
   const nextVersion = parseFloat((version + 0.1).toFixed(1));
 
@@ -50,7 +51,7 @@ export default function GameLayout() {
     setShowModal(true);
     setTimeout(() => {
       setShowModal(false);
-      navigate(`/diary/${id}/result/${resultId}?version=${nextVersion}`);
+      navigate(`/diary/${id}/result/${resultId}?version=${nextVersion}&cleared=${cleared}`);
     }, 3000);
   }
 

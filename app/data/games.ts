@@ -1,6 +1,8 @@
 import back1 from "./mori.png";
-import back2 from "./maturi.png"
-
+import back2 from "./maturi.png";
+import boy from "./boy1.png";
+import semi from "./semi.png";
+import kaminari from "./kaminari.png"
 export type ZoneImage = {
   src: string;
   top: string;
@@ -35,12 +37,19 @@ export const games: Game[] = [
     id: 1,
     title: "7月☀日",
     image: back1,
-    decorImages: [],
+    decorImages: [
+      { src: boy, top: "50%", left: "35%", width: "30%", height: "40%" },
+      { src: semi, top: "15%", left: "25%", width: "5%", height: "40%" },
+      { src: semi, top: "15%", left: "77%", width: "15%", height: "40%" },
+      { src: semi, top: "10%", left: "5%", width: "10%", height: "40%" },
+      { src: semi, top: "20%", left: "65%", width: "6%", height: "40%" },
+      { src: kaminari, top: "5%", left: "50%", width: "10%", height: "40%" },
+    ],
     hotZones: [
       {
         id: "gate",
         label: "Gate",
-        hitImages: [{ src: "https://placehold.co/120x120/555/white?text=Gate", top: "30%", left: "35%", width: "30%", height: "40%" }],
+        hitImages: [{ src: semi, top: "20%", left: "45%", width: "15%", height: "40%" }],
         acceptedItemIds: [1],
       },
     ],

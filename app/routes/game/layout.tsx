@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Outlet, useNavigate, useParams, useSearchParams } from "react-router";
 import { items } from "../../data/items";
 import { getGame, resolveHotZoneImage } from "../../data/games";
@@ -69,47 +69,78 @@ export default function GameLayout() {
           style={{ objectFit: "cover", display: "block" }}
         />
 
+        {/* 装飾画像：バリアント選択後はvariant.decorImages、未選択時はgame.decorImages */}
+        {(() => {
+          const variantDecorImages = game?.hotZones.flatMap((zone) => {
+            const state = placedItems[zone.id];
+            const placedItem = state ? items.find((i) => i.id === state.itemId) : null;
+            const selectedVariant = placedItem && state?.selectedVariantId !== null
+              ? placedItem.variants.find((v) => v.id === state.selectedVariantId)
+              : null;
+            return selectedVariant?.decorImages ?? [];
+          }) ?? [];
+          const decorImages = variantDecorImages.length > 0 ? variantDecorImages : (game?.decorImages ?? []);
+          return decorImages.map((img, i) => (
+            <img
+              key={i}
+              src={img.src}
+              alt=""
+              style={{
+                position: "absolute",
+                top: img.top,
+                left: img.left,
+                width: img.width,
+                height: img.height,
+                objectFit: "contain",
+                pointerEvents: "none",
+              }}
+            />
+          ));
+        })()}
+
         {game?.hotZones.map((zone) => {
           const state = placedItems[zone.id];
           const placedItem = state ? items.find((i) => i.id === state.itemId) : null;
           const selectedVariant = placedItem && state?.selectedVariantId !== null
             ? placedItem.variants.find((v) => v.id === state.selectedVariantId)
             : null;
-          const zoneImage = selectedVariant?.zoneImage ?? zone.defaultImage;
           return (
-            <div
-              key={zone.id}
-              onDragOver={(e) => { e.preventDefault(); if (zone.acceptedItemIds.includes(dragging)) setActiveZone(zone.id); }}
-              onDragLeave={() => setActiveZone(null)}
-              onDrop={(e) => { e.stopPropagation(); handleDrop(zone.id); }}
-              style={{
-                position: "absolute",
-                top: zone.top,
-                left: zone.left,
-                width: zone.width,
-                height: zone.height,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                outline: debug ? `3px dashed ${activeZone === zone.id ? "#f1c40f" : "rgba(255,255,255,0.4)"}` : "none",
-                transition: "outline-color 0.15s",
-              }}
-            >
-              {zoneImage && (
-                <img
-                  src={zoneImage}
-                  alt={zone.label}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                    pointerEvents: "none",
-                    opacity: activeZone === zone.id ? 0.7 : 1,
-                    transition: "opacity 0.15s",
-                  }}
-                />
-              )}
-            </div>
+            <React.Fragment key={zone.id}>
+              {/* 当たり判定のある画像（画像ごとに独立したドロップゾーン） */}
+              {zone.hitImages.map((img, i) => {
+                const displaySrc = selectedVariant?.zoneImage ?? img.src;
+                return (
+                  <div
+                    key={i}
+                    onDragOver={(e) => { e.preventDefault(); if (zone.acceptedItemIds.includes(dragging)) setActiveZone(zone.id); }}
+                    onDragLeave={() => setActiveZone(null)}
+                    onDrop={(e) => { e.stopPropagation(); handleDrop(zone.id); }}
+                    style={{
+                      position: "absolute",
+                      top: img.top,
+                      left: img.left,
+                      width: img.width,
+                      height: img.height,
+                      outline: debug ? `3px dashed ${activeZone === zone.id ? "#f1c40f" : "rgba(255,255,255,0.4)"}` : "none",
+                      transition: "outline-color 0.15s",
+                    }}
+                  >
+                    <img
+                      src={displaySrc}
+                      alt={i === 0 ? zone.label : ""}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        pointerEvents: "none",
+                        opacity: activeZone === zone.id ? 0.7 : 1,
+                        transition: "opacity 0.15s",
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </React.Fragment>
           );
         })}
 
@@ -119,8 +150,8 @@ export default function GameLayout() {
             onClick={(e) => e.stopPropagation()}
             style={{
               position: "absolute",
-              top: tooltipZone.top,
-              left: `calc(${tooltipZone.left} - 220px)`,
+              top: tooltipZone.hitImages[0]?.top ?? "30%",
+              left: `calc(${tooltipZone.hitImages[0]?.left ?? "35%"} - 220px)`,
               width: "200px",
               background: "white",
               borderRadius: "8px",

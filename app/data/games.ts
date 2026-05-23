@@ -1,4 +1,5 @@
-import back1 from "./1-back.png";
+import back1 from "./mori.png";
+import back2 from "./maturi.png"
 
 export type HotZone = {
   id: string;
@@ -29,7 +30,7 @@ export const games: Game[] = [
   {
     id: 2,
     title: "8月△日",
-    image: back1,
+    image: back2,
     hotZones: [
       { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemId: 2 },
     ],

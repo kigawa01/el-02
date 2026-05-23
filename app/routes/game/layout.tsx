@@ -60,16 +60,17 @@ export default function GameLayout() {
     <div  style={{ display: "flex", height: "100%" }}>
       {/* Main image area */}
       <main
-        style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "#000" }}
+        style={{ flex: 1, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", background: "#fff" }}
         onDragOver={(e) => e.preventDefault()}
         onClick={() => setTooltipZoneId(null)}
       >
         {/* アスペクト比固定のシーンコンテナ：比率を維持することでオーバーレイ位置がずれない */}
-        <div style={{ position: "relative", aspectRatio: game?.aspectRatio ?? "16/9", height: "100%", maxWidth: "100%" }}>
+        <div className="bg-white" style={{ position: "relative", aspectRatio: game?.aspectRatio ?? "16/9", height: "100%", maxWidth: "100%" }}>
         <img
           src={game?.image ?? "https://placehold.co/1280x720"}
           alt="game"
-          style={{ width: "100%", height: "100%", objectFit: "fill", display: "block" }}
+          className="h-screen"
+          style={{ width: "100%", objectFit: "fill", display: "block" }}
         />
 
         {/* 装飾画像：バリアント選択後はvariant.decorImages、未選択時はgame.decorImages */}

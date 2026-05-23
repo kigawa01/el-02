@@ -1,7 +1,7 @@
 import type { ZoneImage } from "./games";
 import book from "./book.png";
 import img1_2 from "./1 2.png";
-import img2_2 from "./2 2.png";
+import img2_2 from "./maturi_select.png";
 import img3_2 from "./3 2.png";
 import img4_2 from "./4 2.png";
 import clear1 from "./clear1.png";
@@ -20,8 +20,8 @@ export const selects: Select[] = [
     id: 1,
     backgroundImage: book,
     overlayImages: [
-      { src: img1_2, clearedSrc: clear1,  top: "4%", left: "13%", width: "30%", height: "50%", navigateTo: "/game/1" },
-      { src: img2_2, clearedSrc: maturi1, top: "4%", left: "60%", width: "30%", height: "50%", navigateTo: "/game/2" },
+      { src: img1_2, clearedSrc: clear1,  top: "5%", left: "17%", width: "30%", height: "39%", navigateTo: "/game/1" },
+      { src: img2_2, clearedSrc: maturi1, top: "0%", left: "53%", width: "30%", height: "50%", navigateTo: "/game/2" },
     ],
   },
   {

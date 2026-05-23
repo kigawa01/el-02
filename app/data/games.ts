@@ -1,3 +1,5 @@
+import back1 from "./1-back.png";
+
 export type HotZone = {
   id: string;
   label: string;
@@ -16,7 +18,7 @@ export type Game = {
 export const games: Game[] = [
   {
     id: 1,
-    image: "https://placehold.co/1280x720/1a1a2e/white?text=Game+1",
+    image: back1,
     hotZones: [
       { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%" },
     ],

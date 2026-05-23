@@ -42,6 +42,8 @@ export default function GameLayout() {
     setDragging(null);
   }
 
+  
+
   function handleVariantSelect(zoneId: string, variantId: number, resultId: number) {
     setPlacedItems((prev) => ({ ...prev, [zoneId]: { ...prev[zoneId], selectedVariantId: variantId } }));
     setTooltipZoneId(null);
@@ -206,7 +208,27 @@ export default function GameLayout() {
       <aside  style={{ width: "200px", borderLeft: "1px solid #ccc", overflowY: "auto", background: "#fafafa" }}>
         <Outlet />
         <ul className="h-7/8 flex flex-col justify-center align-bottom" style={{ listStyle: "none", margin: 0, padding: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          {items.map((item) => (
+          {id=="1" &&items.slice(0,3).map((item) => (
+            <li
+              key={item.id}
+              draggable
+              onDragStart={() => setDragging(item.id)}
+              onDragEnd={() => setDragging(null)}
+              style={{
+                cursor: "grab",
+                opacity: dragging === item.id ? 0.4 : 1,
+                textAlign: "center",
+              }}
+            >
+              <img
+                src={item.image}
+                alt={item.name}
+                style={{ width: "80px", height: "80px", borderRadius: "8px", display: "block", margin: "0 auto",objectFit:"contain" }}
+              />
+              <div style={{ fontSize: "0.75rem", marginTop: "0.25rem" }}>{item.name}</div>
+            </li>
+          ))}
+          {id=="2" &&items.slice(3,5).map((item) => (
             <li
               key={item.id}
               draggable

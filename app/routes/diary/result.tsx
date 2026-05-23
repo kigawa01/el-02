@@ -99,7 +99,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         もっかいやる
       </button>
       <button
-        onClick={() => allCleared ? navigate(`/result/1`) : navigate(`/select/1?${buildClearedParams(newClearedIds, { version })}`)}
+        onClick={() => navigate(`/select/1?${buildClearedParams(newClearedIds, { version })}`)}
         style={{
           position: "absolute",
           bottom: "2rem",

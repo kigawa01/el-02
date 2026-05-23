@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router";
 import type { Route } from "./+types/result";
 import { getDiary } from "../../data/diaries";
+import { getGame } from "../../data/games";
 
 export const handle = {
   title: (params: Record<string, string | undefined>) =>
@@ -17,6 +18,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
   const version = searchParams.get("version") ?? "1.0";
   const diary = getDiary(parseInt(params.diaryId));
   const nextGameId = parseInt(params.diaryId) + 1;
+  const hasNextGame = !!getGame(nextGameId);
 
   return (
     <div　className="w-fill opacity-80 h-screen object-cover" style={{ position: "relative" }}>
@@ -41,7 +43,7 @@ export default function DiaryResult({ params }: Route.ComponentProps) {
         <p style={{ fontSize: "1.5rem", marginTop: "1rem" }}>Result {params.resultId}</p>
       </div>
       <button
-        onClick={() => navigate(`/game/${nextGameId}?version=${version}`)}
+        onClick={() => hasNextGame ? navigate(`/game/${nextGameId}?version=${version}`) : navigate(`/result/1`)}
         style={{
           position: "absolute",
           bottom: "2rem",

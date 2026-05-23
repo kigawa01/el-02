@@ -14,6 +14,7 @@ export default [
   ]),
 
   route("diary/:diaryId/result/:resultId", "routes/diary/result.tsx"),
+  route("result/:id", "routes/result/detail.tsx"),
 
   layout("routes/dashboard/layout.tsx", [
     route("dashboard", "routes/dashboard/home.tsx"),

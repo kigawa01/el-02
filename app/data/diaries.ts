@@ -1,3 +1,5 @@
+import back1 from "./1-back.png";
+
 export type Diary = {
   id: number;
   title: string;
@@ -5,8 +7,8 @@ export type Diary = {
 };
 
 export const diaries: Diary[] = [
-  { id: 1, title: "Diary 1: Reflection", image: "https://placehold.co/1280x720/0f3460/white?text=Diary+1" },
-  { id: 2, title: "Diary 2: The Journey", image: "https://placehold.co/1280x720/533483/white?text=Diary+2" },
+  {id: 1, title: "Diary 1: Reflection", image: back1},
+  {id: 2, title: "Diary 2: The Journey", image: back1},
 ];
 
 export function getDiary(id: number): Diary | undefined {

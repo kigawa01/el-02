@@ -29,7 +29,7 @@ export const games: Game[] = [
   {
     id: 2,
     title: "Stage 2: The Dark Forest",
-    image: "https://placehold.co/1280x720/16213e/white?text=Game+2",
+    image: back1,
     hotZones: [
       { id: "gate", label: "Gate", top: "30%", left: "35%", width: "30%", height: "40%", acceptedItemId: 2 },
     ],
